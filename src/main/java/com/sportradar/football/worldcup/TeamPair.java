@@ -2,13 +2,13 @@ package com.sportradar.football.worldcup;
 
 import java.io.Serializable;
 
-public class Teams implements Serializable {
+public class TeamPair implements Serializable {
 
     private String homeTeam;
 
     private String awayTeam;
 
-    public Teams(String homeTeam, String awayTeam){
+    public TeamPair(String homeTeam, String awayTeam){
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
     }

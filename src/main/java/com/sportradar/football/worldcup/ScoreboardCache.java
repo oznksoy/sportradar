@@ -11,7 +11,7 @@ class ScoreboardCache {
     /**
      * Score board cache
      */
-    private Map<Teams, Score> cache;
+    private Map<TeamPair, Score> cache;
 
     private ScoreboardCache(){
         this.cache = new ConcurrentHashMap<>();

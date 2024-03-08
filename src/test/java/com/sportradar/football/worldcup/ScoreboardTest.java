@@ -9,9 +9,9 @@ class ScoreboardTest {
 
     private Scoreboard scoreboard;
 
-    private MatchGenerator matchGenerator;
+    private TeamPairGenerator matchGenerator;
 
-    private List<Teams> generateTestMatches() {
+    private List<TeamPair> generateTestMatches() {
         return Stream.of(
                 matchGenerator.generateMatch("Mexico", "Canada"),
                 matchGenerator.generateMatch("Spain", "Brazil"),
@@ -23,7 +23,7 @@ class ScoreboardTest {
 
     @Test
     void startMatch() {
-        List<Teams> list = generateTestMatches();
+        List<TeamPair> list = generateTestMatches();
         list.forEach(teams -> scoreboard.startMatch(teams));
     }
 
