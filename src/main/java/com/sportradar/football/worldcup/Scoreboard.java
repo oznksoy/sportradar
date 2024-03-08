@@ -11,7 +11,7 @@ public class Scoreboard {
         startMatch(matchGenerator.generateMatch(homeTeam, awayTeam));
     }
 
-    public void startMatch(Match match) {
+    public void startMatch(Teams teams) {
 
     }
 

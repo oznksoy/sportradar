@@ -2,11 +2,8 @@ package com.sportradar.football.worldcup;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ScoreboardTest {
 
@@ -14,7 +11,7 @@ class ScoreboardTest {
 
     private MatchGenerator matchGenerator;
 
-    private List<Match> generateTestMatches() {
+    private List<Teams> generateTestMatches() {
         return Stream.of(
                 matchGenerator.generateMatch("Mexico", "Canada"),
                 matchGenerator.generateMatch("Spain", "Brazil"),
@@ -26,8 +23,8 @@ class ScoreboardTest {
 
     @Test
     void startMatch() {
-        List<Match> matches = generateTestMatches();
-        matches.forEach(match -> scoreboard.startMatch(match));
+        List<Teams> list = generateTestMatches();
+        list.forEach(teams -> scoreboard.startMatch(teams));
     }
 
     @Test
