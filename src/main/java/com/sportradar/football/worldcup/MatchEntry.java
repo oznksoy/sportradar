@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public class MatchEntry implements Serializable {
 
-    String homeTeam;
+    String home;
 
-    String awayTeam;
+    String away;
 
 }
