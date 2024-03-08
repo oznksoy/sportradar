@@ -1,41 +1,36 @@
 package com.sportradar.football.worldcup;
 
 import java.util.List;
-import java.util.Set;
 
-public class Scoreboard {
+public interface Scoreboard {
 
     /**
      * Initiates a match and registers it to the score board.
+     *
+     * @param homeTeam Home team
+     * @param awayTeam Away team
      */
-    public void startMatch(String homeTeam, String awayTeam) {
-        startMatch(new TeamPair(homeTeam, awayTeam));
-    }
-
-    public void startMatch(TeamPair teams) {
-
-    }
+    public void startMatch(String homeTeam, String awayTeam);
 
     /**
      * Receives a pair of absolute scores: home team score and away team score, then updates the scoreboard.
      *
-     * @param homeTeamScore
-     * @param awayTeamScore
+     * @param homeTeamScore Home team score point
+     * @param awayTeamScore Away team score point
      */
-    public void updateScore(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore) {
-        //TODO: implement
-    }
+    public void updateScore(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore);
 
     /**
-     * This removes a match from the scoreboard
+     * Removes a match from the scoreboard
+     *
+     * @param homeTeam Home team
+     * @param awayTeam Away team
      */
-    public void finishMatch(String homeTeam, String awayTeam) {
-        //TODO: implement
-    }
+    public void finishMatch(String homeTeam, String awayTeam);
 
-    public List<Match> summarize() {
-        //TODO: implement
-        return null;
-    }
+    /**
+     * Fetches a summary of the Scoreboard.
+     */
+    List<Match> summarize();
 
 }
