@@ -8,7 +8,7 @@ public class TeamPair implements Serializable {
 
     private String awayTeam;
 
-    public TeamPair(String homeTeam, String awayTeam){
+    public TeamPair(String homeTeam, String awayTeam) {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
     }

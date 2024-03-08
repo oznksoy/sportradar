@@ -9,22 +9,21 @@ class ScoreboardTest {
 
     private Scoreboard scoreboard;
 
-    private TeamPairGenerator matchGenerator;
-
-    private List<TeamPair> generateTestMatches() {
+    private List<TeamPair> generateTestPairs() {
         return Stream.of(
-                matchGenerator.generateMatch("Mexico", "Canada"),
-                matchGenerator.generateMatch("Spain", "Brazil"),
-                matchGenerator.generateMatch("Germany", "France"),
-                matchGenerator.generateMatch("Uruguay", "Italy"),
-                matchGenerator.generateMatch("Argentina", "Australia")
+                new TeamPair("Mexico", "Canada"),
+                new TeamPair("Spain", "Brazil"),
+                new TeamPair("Germany", "France"),
+                new TeamPair("Uruguay", "Italy"),
+                new TeamPair("Argentina", "Australia")
         ).toList();
     }
 
     @Test
     void startMatch() {
-        List<TeamPair> list = generateTestMatches();
+        List<TeamPair> list = generateTestPairs();
         list.forEach(teams -> scoreboard.startMatch(teams));
+        List<Match> actual = scoreboard.summarize();
     }
 
     @Test

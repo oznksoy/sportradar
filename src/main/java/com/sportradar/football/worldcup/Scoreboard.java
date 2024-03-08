@@ -1,5 +1,8 @@
 package com.sportradar.football.worldcup;
 
+import java.util.List;
+import java.util.Set;
+
 public class Scoreboard {
 
     private TeamPairGenerator matchGenerator;
@@ -8,7 +11,7 @@ public class Scoreboard {
      * Initiates a match and registers it to the score board.
      */
     public void startMatch(String homeTeam, String awayTeam) {
-        startMatch(matchGenerator.generateMatch(homeTeam, awayTeam));
+        startMatch(matchGenerator.pair(homeTeam, awayTeam));
     }
 
     public void startMatch(TeamPair teams) {
@@ -30,6 +33,11 @@ public class Scoreboard {
      */
     public void finishMatch(String homeTeam, String awayTeam) {
         //TODO: implement
+    }
+
+    public List<Match> summarize(){
+        //TODO: implement
+        return null;
     }
 
 }
