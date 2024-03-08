@@ -5,13 +5,11 @@ import java.util.Set;
 
 public class Scoreboard {
 
-    private TeamPairGenerator matchGenerator;
-
     /**
      * Initiates a match and registers it to the score board.
      */
     public void startMatch(String homeTeam, String awayTeam) {
-        startMatch(matchGenerator.pair(homeTeam, awayTeam));
+        startMatch(new TeamPair(homeTeam, awayTeam));
     }
 
     public void startMatch(TeamPair teams) {
@@ -35,7 +33,7 @@ public class Scoreboard {
         //TODO: implement
     }
 
-    public List<Match> summarize(){
+    public List<Match> summarize() {
         //TODO: implement
         return null;
     }
