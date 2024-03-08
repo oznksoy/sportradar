@@ -2,12 +2,13 @@ package com.sportradar.football.worldcup;
 
 public class Scoreboard {
 
+    private MatchKeyGenerator keyGenerator;
 
     /**
      * Initiates a match and registers it to the score board.
      */
     public void startMatch(String homeTeam, String awayTeam) {
-        //start match
+        //TODO: implement
     }
 
     /**
@@ -17,13 +18,14 @@ public class Scoreboard {
      * @param awayTeamScore
      */
     public void updateScore(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore) {
+        //TODO: implement
     }
 
     /**
      * This removes a match from the scoreboard
      */
-    public void finishMatch() {
-
+    public void finishMatch(String homeTeam, String awayTeam) {
+        //TODO: implement
     }
 
 }
