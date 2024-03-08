@@ -3,7 +3,7 @@ package com.sportradar.football.worldcup;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class MatchDetails implements Serializable {
+public class Score implements Serializable {
 
     private LocalDateTime matchDateTime;
 
@@ -18,7 +18,7 @@ public class MatchDetails implements Serializable {
     public void setMatchDateTime(LocalDateTime matchDateTime) {
         this.matchDateTime = matchDateTime;
     }
-    
+
     public Integer getHomeScore() {
         return homeScore;
     }

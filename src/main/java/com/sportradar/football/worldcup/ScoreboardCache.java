@@ -6,12 +6,12 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * In-built mechanisms of @link {@link ConcurrentHashMap} collection enables desired fast read and securely locked write operations by default
  */
-public class ScoreboardCache {
+class ScoreboardCache {
 
     /**
      * Score board cache
      */
-    private Map<MatchKey, MatchDetails> cache;
+    private Map<Match, Score> cache;
 
     private ScoreboardCache(){
         this.cache = new ConcurrentHashMap<>();
