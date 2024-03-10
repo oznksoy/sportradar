@@ -78,8 +78,8 @@ class ScoreboardTest {
 
     @Test
     void givenScoreboardIsEmpty_WhenMultipleValidStartMatchInputsAreReceived_ThenANewMatchIsAddedToTheScoreboard() throws ScoreboardInputException {
-        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:35:30"));
         initScoreboard(clockMock);
+        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:35:30"));
         scoreboard.startMatch("Mexico", "Canada");
         scoreboard.startMatch("Spain", "Brazil");
         scoreboard.startMatch("Germany", "France");
@@ -99,8 +99,8 @@ class ScoreboardTest {
 
     @Test
     void givenScoreboardIsLoaded_WhenMultipleValidUpdateScoreInputsAreReceived_ThenExistingMatchScoresAreUpdated() throws ScoreboardInputException {
-        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:35:30"));
         initScoreboard(clockMock);
+        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:35:30"));
         scoreboard.startMatch("Mexico", "Canada");
         scoreboard.startMatch("Spain", "Brazil");
         scoreboard.startMatch("Germany", "France");
@@ -155,63 +155,30 @@ class ScoreboardTest {
         assertIterableEquals(expected, actual);
     }
 
-//    @Test
-//    void givenEmptyWhenMatchStartedAndThenUpdated() throws ScoreboardInputException {
-//        scoreboard.startMatch("Mexico", "Canada");
-//        scoreboard.updateScore("Mexico", "Canada", 1, 2);
-//        Match actual = scoreboard.summary().getFirst();
-//        assertEquals(decorateMatch("Uruguay", "Italy", "2024-03-01T21:35:30Z", 6, 6), actual);
-//    }
-//
-//    @Test
-//    void givenEmptyWhenMultipleMatchesStartedAndThenUpdated() throws ScoreboardInputException {
-//        scoreboard.startMatch("Mexico", "Canada");
-//        scoreboard.updateScore("Mexico", "Canada", 0, 5);
-//        scoreboard.startMatch("Uruguay", "Italy");
-//        scoreboard.updateScore("Uruguay", "Italy", 6, 6);
-//        List<Match> actual = scoreboard.summary();
-//        List<Match> expected = Stream.of(
-//                decorateMatch("Uruguay", "Italy", "2024-03-01T21:35:30Z", 6, 6),
-//                decorateMatch("Mexico", "Canada", "2024-03-01T21:35:30Z", 0, 5)
-//        ).toList();
-//        assertIterableEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void givenASetOfMatches_WhenUpdatedAndSummaryRequested() throws ScoreboardInputException {
-//        scoreboard.startMatch("Mexico", "Canada");
-//        scoreboard.startMatch("Spain", "Brazil");
-//        scoreboard.startMatch("Germany", "France");
-//        scoreboard.startMatch("Uruguay", "Italy");
-//        scoreboard.startMatch("Argentina", "Australia");
-//        List<Match> actual = scoreboard.summary();
-//        List<Match> expected = Stream.of(
-//                decorateMatch("Mexico", "Canada", "2024-03-01T21:35:30Z", 0, 0),
-//                decorateMatch("Spain", "Brazil", "2024-03-01T21:35:30Z", 0, 0),
-//                decorateMatch("Germany", "France", "2024-03-01T21:35:30Z", 0, 0),
-//                decorateMatch("Uruguay", "Italy", "2024-03-01T21:35:30Z", 0, 0),
-//                decorateMatch("Argentina", "Australia", "2024-03-01T21:35:30Z", 0, 0)
-//        ).toList();
-//        assertIterableEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void givenASetOfMatches_WhenUpdatedAndSummaryRequested_ThenReceiveAsSorted() throws ScoreboardInputException {
-//        scoreboard.startMatch("Mexico", "Canada");
-//        scoreboard.startMatch("Spain", "Brazil");
-//        scoreboard.startMatch("Germany", "France");
-//        scoreboard.startMatch("Uruguay", "Italy");
-//        scoreboard.startMatch("Argentina", "Australia");
-//        List<Match> actual = scoreboard.summary();
-//        List<Match> expected = Stream.of(
-//                decorateMatch("Uruguay", "Italy", "2024-03-01T21:35:30Z", 6, 6),
-//                decorateMatch("Spain", "Brazil", "2024-03-01T21:35:30Z", 10, 2),
-//                decorateMatch("Mexico", "Canada", "2024-03-01T21:35:30Z", 0, 5),
-//                decorateMatch("Argentina", "Australia", "2024-03-01T21:35:30Z", 3, 1),
-//                decorateMatch("Germany", "France", "2024-03-01T21:35:30Z", 2, 2)
-//        ).toList();
-//        assertIterableEquals(expected, actual);
-//    }
+    @Test
+    void givenScoreboardIsLoaded_WhenAnExistingMatchIsFinished_ThenFinishedMatchIsRemovedFromScorboard() throws ScoreboardInputException {
+        initScoreboard(clockMock);
+        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:35:30"));
+        scoreboard.startMatch("Mexico", "Canada");
+        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:36:30"));
+        scoreboard.startMatch("Spain", "Brazil");
+        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:37:30"));
+        scoreboard.startMatch("Germany", "France");
+        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:38:30"));
+        scoreboard.startMatch("Uruguay", "Italy");
+        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:39:30"));
+        scoreboard.startMatch("Argentina", "Australia");
+        scoreboard.finishMatch("Mexico", "Canada");
+        List<Match> actual = scoreboard.summary();
+        List<Match> expected = Stream.of(
+                decorateMatch("Uruguay", "Italy", "2024-03-01T21:38:30", 6, 6),
+                decorateMatch("Spain", "Brazil", "2024-03-01T21:36:30", 10, 2),
+                decorateMatch("Argentina", "Australia", "2024-03-01T21:39:30", 3, 1),
+                decorateMatch("Germany", "France", "2024-03-01T21:37:30", 2, 2)
+        ).toList();
+        assertEquals(4, actual.size());
+        assertIterableEquals(expected, actual);
+    }
 
     // ************************
     // Supporting Test Methods:

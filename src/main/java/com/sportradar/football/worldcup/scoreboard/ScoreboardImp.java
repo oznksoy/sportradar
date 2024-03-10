@@ -1,5 +1,6 @@
 package com.sportradar.football.worldcup.scoreboard;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -21,33 +22,48 @@ class ScoreboardImp implements Scoreboard {
 
     @Override
     public void startMatch(String homeTeam, String awayTeam) throws ScoreboardInputException {
-        //TODO: Should an already existing game be added to the cache?
         audit.checkInputValidity(homeTeam, awayTeam);
-
-        cache.put(fillTeamPair(homeTeam, awayTeam), initiateDetails());
+        TeamPair teamPair = fillTeamPair(homeTeam, awayTeam);
+        audit.checkIfMustNotHaveEntry(cache.hasEntry(teamPair));
+        cache.put(teamPair, initiateDetails());
     }
 
     @Override
     public void updateScore(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore) throws ScoreboardInputException {
-        //TODO: Should it be be able to override to a lower score to an existing match?
-        //TODO: Should there be a warning thrown when an nonexisting match is requested to be updated?
-        //TODO: Should NOT override the MatchTime during update!!!
         audit.checkInputValidity(homeTeam, awayTeam);
-        cache.put(fillTeamPair(homeTeam, awayTeam), fillDetails(homeTeamScore, awayTeamScore));
+        TeamPair teamPair = fillTeamPair(homeTeam, awayTeam);
+        audit.checkIfMustHaveEntry(cache.hasEntry(teamPair));
+        Details details = cache.getDetails(teamPair);
+        audit.checkScoreConsistency(
+                homeTeamScore,
+                awayTeamScore,
+                details.getScore().getHomeScore(),
+                details.getScore().getAwayScore()
+        );
+        cache.put(teamPair, fillDetails(homeTeamScore, awayTeamScore, details.getMatchTime()));
     }
 
     @Override
     public void finishMatch(String homeTeam, String awayTeam) throws ScoreboardInputException {
-        //TODO: Should there be a warning thrown when an nonexisting match is requested to be finished?
         audit.checkInputValidity(homeTeam, awayTeam);
-        cache.remove(fillTeamPair(homeTeam, awayTeam));
+        TeamPair teamPair = fillTeamPair(homeTeam, awayTeam);
+        audit.checkIfMustHaveEntry(cache.hasEntry(teamPair));
+        cache.remove(teamPair);
     }
 
     @Override
     public List<Match> summary() {
         return cache.snapshot().entrySet().stream()
                 .map(this::decorateMatch)
-                .sorted(getComparator()).toList();
+                .sorted(getTotalScoreComparator().reversed().thenComparing(getMatchTimeComparator())).toList();
+    }
+
+    private Comparator<Match> getTotalScoreComparator() {
+        return Comparator.comparingInt(match -> (match.getHomeScore() + match.getAwayScore()));
+    }
+
+    private Comparator<Match> getMatchTimeComparator() {
+        return (match1, match2) -> match2.getMatchTime().compareTo(match1.getMatchTime());
     }
 
     private TeamPair fillTeamPair(String homeTeam, String awayTeam) {
@@ -57,10 +73,10 @@ class ScoreboardImp implements Scoreboard {
         return teamPair;
     }
 
-    private Details fillDetails(int homeTeamScore, int awayTeamScore) {
+    private Details fillDetails(int homeTeamScore, int awayTeamScore, LocalDateTime matchTime) {
         Details details = new Details();
         details.setScore(fillScore(homeTeamScore, awayTeamScore));
-        details.setMatchTime(clock.fetchTime());
+        details.setMatchTime(matchTime);
         return details;
     }
 
@@ -93,19 +109,6 @@ class ScoreboardImp implements Scoreboard {
         match.setHomeScore(entry.getValue().getScore().getHomeScore());
         match.setAwayScore(entry.getValue().getScore().getAwayScore());
         return match;
-    }
-
-    private Comparator<Match> getComparator() {
-        //TODO: consider comparator chain with functional interfaces
-        return (match1, match2) -> {
-            int totalScore1 = match1.getHomeScore() + match1.getAwayScore();
-            int totalScore2 = match2.getHomeScore() + match2.getAwayScore();
-            int result = totalScore2 - totalScore1;
-            if (result == 0) {
-                return match1.getMatchTime().compareTo(match2.getMatchTime());
-            }
-            return result;
-        };
     }
 
 }
