@@ -1,4 +1,4 @@
-package com.sportradar.football.worldcup;
+package com.sportradar.football.worldcup.scoreboard;
 
 import java.util.List;
 
@@ -31,6 +31,6 @@ public interface Scoreboard {
     /**
      * Fetches a summary of the Scoreboard.
      */
-    List<Match> summarize();
+    List<Match> summary();
 
 }
