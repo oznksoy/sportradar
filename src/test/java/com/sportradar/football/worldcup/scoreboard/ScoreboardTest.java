@@ -168,6 +168,11 @@ class ScoreboardTest {
         scoreboard.startMatch("Uruguay", "Italy");
         when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:39:30"));
         scoreboard.startMatch("Argentina", "Australia");
+        scoreboard.updateScore("Mexico", "Canada", 0, 5);
+        scoreboard.updateScore("Spain", "Brazil", 10, 2);
+        scoreboard.updateScore("Germany", "France", 2, 2);
+        scoreboard.updateScore("Uruguay", "Italy", 6, 6);
+        scoreboard.updateScore("Argentina", "Australia", 3, 1);
         scoreboard.finishMatch("Mexico", "Canada");
         List<Match> actual = scoreboard.summary();
         List<Match> expected = Stream.of(
