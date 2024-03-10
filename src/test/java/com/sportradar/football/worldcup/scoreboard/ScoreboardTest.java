@@ -1,5 +1,7 @@
 package com.sportradar.football.worldcup.scoreboard;
 
+import com.sportradar.football.worldcup.scoreboard.exception.ScoreboardConsistencyException;
+import com.sportradar.football.worldcup.scoreboard.exception.ScoreboardInputException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -35,7 +37,7 @@ class ScoreboardTest {
 
     @ParameterizedTest
     @MethodSource("invalidInputScenarios")
-    void givenScoreboardHasMatch_WhenInvalidUpdateScoreInputIsReceived_ThenMatchIsNotAdded_AndExceptionIsThrown(String homeTeam, String awayTeam, String expectedExceptionMessage) throws ScoreboardInputException {
+    void givenScoreboardHasMatch_WhenInvalidUpdateScoreInputIsReceived_ThenMatchIsNotAdded_AndExceptionIsThrown(String homeTeam, String awayTeam, String expectedExceptionMessage) throws ScoreboardInputException, ScoreboardConsistencyException {
         initScoreboard(new ScoreboardClock());
         scoreboard.startMatch("Mexico", "Canada");
         ScoreboardInputException thrown = Assertions.assertThrows(ScoreboardInputException.class, () -> scoreboard.updateScore(homeTeam, awayTeam, 1, 1));
@@ -44,7 +46,7 @@ class ScoreboardTest {
 
     @ParameterizedTest
     @MethodSource("invalidInputScenarios")
-    void givenScoreboardHasMatch_WhenInvalidFinishMatchInputIsReceived_ThenMatchIsNotAdded_AndExceptionIsThrown(String homeTeam, String awayTeam, String expectedExceptionMessage) throws ScoreboardInputException {
+    void givenScoreboardHasMatch_WhenInvalidFinishMatchInputIsReceived_ThenMatchIsNotAdded_AndExceptionIsThrown(String homeTeam, String awayTeam, String expectedExceptionMessage) throws ScoreboardInputException, ScoreboardConsistencyException {
         initScoreboard(new ScoreboardClock());
         scoreboard.startMatch("Mexico", "Canada");
         ScoreboardInputException thrown = Assertions.assertThrows(ScoreboardInputException.class, () -> scoreboard.finishMatch(homeTeam, awayTeam));
@@ -63,7 +65,7 @@ class ScoreboardTest {
     }
 
     @Test
-    void givenScoreboardIsEmpty_WhenValidStartMatchInputIsReceived_ThenANewMatchIsAddedToTheScoreboard() throws ScoreboardInputException {
+    void givenScoreboardIsEmpty_WhenValidStartMatchInputIsReceived_ThenANewMatchIsAddedToTheScoreboard() throws ScoreboardInputException, ScoreboardConsistencyException {
         when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:35:30"));
         initScoreboard(clockMock);
         scoreboard.startMatch("Mexico", "Canada");
@@ -73,7 +75,7 @@ class ScoreboardTest {
     }
 
     @Test
-    void givenScoreboardIsEmpty_WhenMultipleValidStartMatchInputsAreReceived_ThenANewMatchIsAddedToTheScoreboard() throws ScoreboardInputException {
+    void givenScoreboardIsEmpty_WhenMultipleValidStartMatchInputsAreReceived_ThenANewMatchIsAddedToTheScoreboard() throws ScoreboardInputException, ScoreboardConsistencyException {
         initScoreboard(clockMock);
         when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:35:30"));
         scoreboard.startMatch("Mexico", "Canada");
@@ -94,7 +96,57 @@ class ScoreboardTest {
     }
 
     @Test
-    void givenScoreboardIsLoaded_WhenMultipleValidUpdateScoreInputsAreReceived_ThenExistingMatchScoresAreUpdated() throws ScoreboardInputException {
+    void givenScoreboardIsLoaded_WhenExistingMatchIsAskedToBeStarted_ThenThrowAWarningMessage_AndDoNotAlterTheScoreboard() throws ScoreboardInputException, ScoreboardConsistencyException {
+        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:35:30"));
+        initScoreboard(clockMock);
+        scoreboard.startMatch("Mexico", "Canada");
+        ScoreboardConsistencyException thrown = Assertions.assertThrows(ScoreboardConsistencyException.class, () -> scoreboard.startMatch("Mexico", "Canada"));
+        Assertions.assertEquals("This match(Mexico-Canada) has already started.", thrown.getMessage());
+    }
+
+    @Test
+    void givenScoreboardIsLoaded_WhenUpdateScoreHasNotStarted_ThenThrowAWarningMessage_AndDoNotAlterTheScoreboard() throws ScoreboardInputException, ScoreboardConsistencyException {
+        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:35:30"));
+        initScoreboard(clockMock);
+        scoreboard.startMatch("Mexico", "Canada");
+        scoreboard.updateScore("Mexico", "Canada", 1, 2);
+        ScoreboardConsistencyException thrown = Assertions.assertThrows(ScoreboardConsistencyException.class,
+                () -> scoreboard.updateScore("Croatia", "Sweden", 2, 3));
+        Assertions.assertEquals("This match(Croatia-Sweden) has not been started.", thrown.getMessage());
+    }
+
+    @ParameterizedTest
+    @MethodSource("inconsistentUpdateScores")
+    void givenScoreboardIsLoaded_WhenUpdateScoreIsInconsistent_ThenThrowAWarningMessage_AndDoNotAlterTheScoreboard(int homeScore, int awayScore, int homeScoreUpdate, int awayScoreUpdate, String msg) throws ScoreboardInputException, ScoreboardConsistencyException {
+        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:35:30"));
+        initScoreboard(clockMock);
+        scoreboard.startMatch("Mexico", "Canada");
+        scoreboard.updateScore("Mexico", "Canada", homeScore, awayScore);
+        ScoreboardConsistencyException thrown = Assertions.assertThrows(ScoreboardConsistencyException.class,
+                () -> scoreboard.updateScore("Mexico", "Canada", homeScoreUpdate, awayScoreUpdate));
+        Assertions.assertEquals(msg, thrown.getMessage());
+    }
+
+    private static Stream<Arguments> inconsistentUpdateScores() {
+        return Stream.of(
+                Arguments.of(3, 5, 0, 5, "An input value is inconsistent: Home Team Score. The score can only be increased or unchanged."),
+                Arguments.of(2, 2, 5, 0, "An input value is inconsistent: Away Team. The score can only be increased or unchanged."),
+                Arguments.of(3, 5, 0, 0, "An input value is inconsistent: Home Team Score. The score can only be increased or unchanged."),
+                Arguments.of(3, 3, 3, 3, "The score input is already recorded.")
+        );
+    }
+
+    @Test
+    void givenScoreboardIsLoaded_WhenNonExistingMatchAskedToBeFinished_ThenThrowAWarningMessage_AndDoNotAlterTheScoreboard() throws ScoreboardInputException, ScoreboardConsistencyException {
+        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:35:30"));
+        initScoreboard(clockMock);
+        scoreboard.startMatch("Mexico", "Canada");
+        ScoreboardConsistencyException thrown = Assertions.assertThrows(ScoreboardConsistencyException.class, () -> scoreboard.finishMatch("Croatia", "Sweden"));
+        Assertions.assertEquals("This match(Croatia-Sweden) has not been started.", thrown.getMessage());
+    }
+
+    @Test
+    void givenScoreboardIsLoaded_WhenMultipleValidUpdateScoreInputsAreReceived_ThenExistingMatchScoresAreUpdated() throws ScoreboardInputException, ScoreboardConsistencyException {
         initScoreboard(clockMock);
         when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:35:30"));
         scoreboard.startMatch("Mexico", "Canada");
@@ -120,25 +172,8 @@ class ScoreboardTest {
     }
 
     @Test
-    void givenScoreboardIsLoaded_AndHasDifferingTimeStamps_WhenMultipleValidUpdateScoreInputsAreReceived_ThenExistingMatchScoresAreUpdated() throws ScoreboardInputException {
-        initScoreboard(clockMock);
-        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:35:30"));
-        scoreboard.startMatch("Mexico", "Canada");
-        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:36:30"));
-        scoreboard.startMatch("Spain", "Brazil");
-        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:37:30"));
-        scoreboard.startMatch("Germany", "France");
-        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:38:30"));
-        scoreboard.startMatch("Uruguay", "Italy");
-        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:39:30"));
-        scoreboard.startMatch("Argentina", "Australia");
-
-        scoreboard.updateScore("Mexico", "Canada", 0, 5);
-        scoreboard.updateScore("Spain", "Brazil", 10, 2);
-        scoreboard.updateScore("Germany", "France", 2, 2);
-        scoreboard.updateScore("Uruguay", "Italy", 6, 6);
-        scoreboard.updateScore("Argentina", "Australia", 3, 1);
-
+    void givenScoreboardIsLoaded_AndHasDifferingTimeStamps_WhenMultipleValidUpdateScoreInputsAreReceived_ThenExistingMatchScoresAreUpdated() throws ScoreboardInputException, ScoreboardConsistencyException {
+        injectUpdated5MatchLoadedScoreboardScenario();
         List<Match> actual = scoreboard.summary();
         List<Match> expected = Stream.of(
                 decorateMatch("Uruguay", "Italy", "2024-03-01T21:38:30", 6, 6),
@@ -152,7 +187,25 @@ class ScoreboardTest {
     }
 
     @Test
-    void givenScoreboardIsLoaded_WhenAnExistingMatchIsFinished_ThenFinishedMatchIsRemovedFromScorboard() throws ScoreboardInputException {
+    void givenScoreboardIsLoaded_WhenAnExistingMatchIsFinished_ThenFinishedMatchIsRemovedFromScoreboard() throws ScoreboardInputException, ScoreboardConsistencyException {
+        injectUpdated5MatchLoadedScoreboardScenario();
+        scoreboard.finishMatch("Mexico", "Canada");
+        List<Match> actual = scoreboard.summary();
+        List<Match> expected = Stream.of(
+                decorateMatch("Uruguay", "Italy", "2024-03-01T21:38:30", 6, 6),
+                decorateMatch("Spain", "Brazil", "2024-03-01T21:36:30", 10, 2),
+                decorateMatch("Argentina", "Australia", "2024-03-01T21:39:30", 3, 1),
+                decorateMatch("Germany", "France", "2024-03-01T21:37:30", 2, 2)
+        ).toList();
+        assertEquals(4, actual.size());
+        assertIterableEquals(expected, actual);
+    }
+
+    // *****************
+    // Common Scenarios:
+    // *****************
+
+    private void injectUpdated5MatchLoadedScoreboardScenario() throws ScoreboardInputException, ScoreboardConsistencyException {
         initScoreboard(clockMock);
         when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:35:30"));
         scoreboard.startMatch("Mexico", "Canada");
@@ -169,16 +222,6 @@ class ScoreboardTest {
         scoreboard.updateScore("Germany", "France", 2, 2);
         scoreboard.updateScore("Uruguay", "Italy", 6, 6);
         scoreboard.updateScore("Argentina", "Australia", 3, 1);
-        scoreboard.finishMatch("Mexico", "Canada");
-        List<Match> actual = scoreboard.summary();
-        List<Match> expected = Stream.of(
-                decorateMatch("Uruguay", "Italy", "2024-03-01T21:38:30", 6, 6),
-                decorateMatch("Spain", "Brazil", "2024-03-01T21:36:30", 10, 2),
-                decorateMatch("Argentina", "Australia", "2024-03-01T21:39:30", 3, 1),
-                decorateMatch("Germany", "France", "2024-03-01T21:37:30", 2, 2)
-        ).toList();
-        assertEquals(4, actual.size());
-        assertIterableEquals(expected, actual);
     }
 
     // ************************

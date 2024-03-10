@@ -1,4 +1,4 @@
-package com.sportradar.football.worldcup.scoreboard;
+package com.sportradar.football.worldcup.scoreboard.exception;
 
 import java.io.IOException;
 

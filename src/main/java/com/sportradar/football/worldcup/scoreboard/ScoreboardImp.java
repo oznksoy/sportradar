@@ -1,5 +1,8 @@
 package com.sportradar.football.worldcup.scoreboard;
 
+import com.sportradar.football.worldcup.scoreboard.exception.ScoreboardConsistencyException;
+import com.sportradar.football.worldcup.scoreboard.exception.ScoreboardInputException;
+
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -21,18 +24,18 @@ class ScoreboardImp implements Scoreboard {
     }
 
     @Override
-    public void startMatch(String homeTeam, String awayTeam) throws ScoreboardInputException {
+    public void startMatch(String homeTeam, String awayTeam) throws ScoreboardInputException, ScoreboardConsistencyException {
         audit.checkInputValidity(homeTeam, awayTeam);
         TeamPair teamPair = fillTeamPair(homeTeam, awayTeam);
-        audit.checkIfMustNotHaveEntry(cache.hasEntry(teamPair));
+        audit.checkIfMustNotHaveEntry(cache.hasEntry(teamPair), homeTeam, awayTeam);
         cache.put(teamPair, initiateDetails());
     }
 
     @Override
-    public void updateScore(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore) throws ScoreboardInputException {
+    public void updateScore(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore) throws ScoreboardInputException, ScoreboardConsistencyException {
         audit.checkInputValidity(homeTeam, awayTeam);
         TeamPair teamPair = fillTeamPair(homeTeam, awayTeam);
-        audit.checkIfMustHaveEntry(cache.hasEntry(teamPair));
+        audit.checkIfMustHaveEntry(cache.hasEntry(teamPair), homeTeam, awayTeam);
         Details details = cache.getDetails(teamPair);
         audit.checkScoreConsistency(
                 homeTeamScore,
@@ -44,10 +47,10 @@ class ScoreboardImp implements Scoreboard {
     }
 
     @Override
-    public void finishMatch(String homeTeam, String awayTeam) throws ScoreboardInputException {
+    public void finishMatch(String homeTeam, String awayTeam) throws ScoreboardInputException, ScoreboardConsistencyException {
         audit.checkInputValidity(homeTeam, awayTeam);
         TeamPair teamPair = fillTeamPair(homeTeam, awayTeam);
-        audit.checkIfMustHaveEntry(cache.hasEntry(teamPair));
+        audit.checkIfMustHaveEntry(cache.hasEntry(teamPair), homeTeam, awayTeam);
         cache.remove(teamPair);
     }
 
