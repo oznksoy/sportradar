@@ -44,4 +44,8 @@ class ScoreboardCache {
         );
     }
 
+    void cleanCache(){
+        this.scoreboard.clear();
+    }
+
 }
