@@ -199,12 +199,6 @@ class ScoreboardTest {
         this.scoreboard = new ScoreboardImp(ScoreboardCache.getInstance(), clock, new ScoreboardAudit());
     }
 
-    private Clock fetchTestClock(String timeClause) {
-        return Clock.fixed(
-                Instant.parse(timeClause),
-                ZoneOffset.UTC);
-    }
-
     private Match decorateMatch(String home, String away, String time, int homeScore, int awayScore) {
         Match match = new Match();
         match.setHomeTeam(home);
