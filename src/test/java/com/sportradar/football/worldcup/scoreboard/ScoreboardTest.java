@@ -27,6 +27,10 @@ class ScoreboardTest {
     @Mock
     private ScoreboardClock clockMock;
 
+    //***********************************
+    // Invalid Input Scenario Test Cases:
+    //***********************************
+
     @ParameterizedTest
     @MethodSource("invalidInputScenarios")
     void givenScoreboardIsEmpty_WhenInvalidStartMatchInputIsReceived_ThenMatchIsNotAdded_AndExceptionIsThrown(String homeTeam, String awayTeam, String expectedExceptionMessage) {
@@ -63,6 +67,10 @@ class ScoreboardTest {
                 Arguments.of("   ", "   ", "An input value is blank: Home Team")
                 );
     }
+
+    //****************************************
+    // Inconsistent State Scenario Test Cases:
+    //***************************************
 
     @Test
     void givenScoreboardIsEmpty_WhenValidStartMatchInputIsReceived_ThenANewMatchIsAddedToTheScoreboard() throws ScoreboardInputException, ScoreboardConsistencyException {
@@ -144,6 +152,10 @@ class ScoreboardTest {
         ScoreboardConsistencyException thrown = Assertions.assertThrows(ScoreboardConsistencyException.class, () -> scoreboard.finishMatch("Croatia", "Sweden"));
         Assertions.assertEquals("This match(Croatia-Sweden) has not been started.", thrown.getMessage());
     }
+
+    //************************************
+    // Expected Valid Scenario Test Cases:
+    //************************************
 
     @Test
     void givenScoreboardIsLoaded_WhenMultipleValidUpdateScoreInputsAreReceived_ThenExistingMatchScoresAreUpdated() throws ScoreboardInputException, ScoreboardConsistencyException {
