@@ -27,11 +27,11 @@ class ScoreboardCache {
         return instance;
     }
 
-    public boolean hasEntry(TeamPair teamPair){
+    public boolean hasEntry(TeamPair teamPair) {
         return scoreboard.containsKey(teamPair);
     }
 
-    public Details getDetails(TeamPair teamPair){
+    public Details getDetails(TeamPair teamPair) {
         return scoreboard.get(teamPair);
     }
 
@@ -52,7 +52,7 @@ class ScoreboardCache {
         );
     }
 
-    void cleanCache(){
+    void cleanCache() {
         this.scoreboard.clear();
     }
 

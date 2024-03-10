@@ -10,13 +10,13 @@ class ScoreboardAudit {
     public static final String AWAY_TEAM_SCORE = "Away Team";
 
     public void checkIfMustNotHaveEntry(boolean hasEntry) throws ScoreboardInputException {
-        if(hasEntry) {
+        if (hasEntry) {
             throw new ScoreboardInputException("This match has already started.");
         }
     }
 
     public void checkIfMustHaveEntry(boolean hasEntry) throws ScoreboardInputException {
-        if(!hasEntry) {
+        if (!hasEntry) {
             throw new ScoreboardInputException("This match has not been started.");
         }
     }
@@ -27,10 +27,10 @@ class ScoreboardAudit {
     }
 
     public void checkIfScoresAreConsistent(String inputName, int inputScore, int entryScore) throws ScoreboardInputException {
-        if(inputScore < entryScore) {
+        if (inputScore < entryScore) {
             throw new ScoreboardInputException(
                     "An input value is inconsistent: " + inputName + ". " +
-                    "The score can only be increased or unchanged.");
+                            "The score can only be increased or unchanged.");
         }
     }
 
