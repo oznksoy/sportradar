@@ -22,7 +22,8 @@ class ScoreboardImp implements Scoreboard {
     @Override
     public void startMatch(String homeTeam, String awayTeam) throws ScoreboardInputException {
         //TODO: Should an already existing game be added to the cache?
-        audit.checkInput(homeTeam, awayTeam);
+        audit.checkInputValidity(homeTeam, awayTeam);
+
         cache.put(fillTeamPair(homeTeam, awayTeam), initiateDetails());
     }
 
@@ -30,14 +31,15 @@ class ScoreboardImp implements Scoreboard {
     public void updateScore(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore) throws ScoreboardInputException {
         //TODO: Should it be be able to override to a lower score to an existing match?
         //TODO: Should there be a warning thrown when an nonexisting match is requested to be updated?
-        audit.checkInput(homeTeam, awayTeam);
+        //TODO: Should NOT override the MatchTime during update!!!
+        audit.checkInputValidity(homeTeam, awayTeam);
         cache.put(fillTeamPair(homeTeam, awayTeam), fillDetails(homeTeamScore, awayTeamScore));
     }
 
     @Override
     public void finishMatch(String homeTeam, String awayTeam) throws ScoreboardInputException {
         //TODO: Should there be a warning thrown when an nonexisting match is requested to be finished?
-        audit.checkInput(homeTeam, awayTeam);
+        audit.checkInputValidity(homeTeam, awayTeam);
         cache.remove(fillTeamPair(homeTeam, awayTeam));
     }
 

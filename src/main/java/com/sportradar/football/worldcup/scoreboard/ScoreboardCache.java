@@ -27,6 +27,14 @@ class ScoreboardCache {
         return instance;
     }
 
+    public boolean hasEntry(TeamPair teamPair){
+        return scoreboard.containsKey(teamPair);
+    }
+
+    public Details getDetails(TeamPair teamPair){
+        return scoreboard.get(teamPair);
+    }
+
     public void put(TeamPair teamPair, Details details) {
         scoreboard.put(teamPair, details);
     }

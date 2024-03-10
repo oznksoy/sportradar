@@ -7,7 +7,7 @@ class ScoreboardAudit {
     public static final String HOME_TEAM = "Home Team";
     public static final String AWAY_TEAM = "Away Team";
 
-    public void checkInput(String homeTeam, String awayTeam) throws ScoreboardInputException {
+    public void checkInputValidity(String homeTeam, String awayTeam) throws ScoreboardInputException {
         checkBlankInput(HOME_TEAM, homeTeam);
         checkBlankInput(AWAY_TEAM, awayTeam);
     }
