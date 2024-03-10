@@ -16,8 +16,8 @@ public class Match implements Serializable {
 
     private Integer awayScore;
 
-
-    public Match() {}
+    public Match() {
+    }
 
     public String getHomeTeam() {
         return homeTeam;
@@ -73,6 +73,17 @@ public class Match implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(homeTeam, awayTeam, matchTime, homeScore, awayScore);
+    }
+
+    @Override
+    public String toString() {
+        return "Match{" +
+                "homeTeam='" + homeTeam + '\'' +
+                ", awayTeam='" + awayTeam + '\'' +
+                ", matchTime=" + matchTime +
+                ", homeScore=" + homeScore +
+                ", awayScore=" + awayScore +
+                '}';
     }
 
 }

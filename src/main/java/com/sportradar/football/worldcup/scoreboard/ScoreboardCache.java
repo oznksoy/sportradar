@@ -9,26 +9,25 @@ import java.util.stream.Collectors;
  */
 class ScoreboardCache {
 
+    private static ScoreboardCache instance;
     /**
      * Score board cache
      */
     private final Map<TeamPair, Details> scoreboard;
 
-    private ScoreboardCache(){
+    private ScoreboardCache() {
         this.scoreboard = new ConcurrentHashMap<>();
     }
 
-    private static ScoreboardCache instance;
-
     public static ScoreboardCache getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new ScoreboardCache();
 
         }
         return instance;
     }
 
-    public void put(TeamPair teamPair, Details details){
+    public void put(TeamPair teamPair, Details details) {
         scoreboard.put(teamPair, details);
     }
 
@@ -36,7 +35,7 @@ class ScoreboardCache {
         this.scoreboard.remove(teamPair);
     }
 
-    public Map<TeamPair, Details> snapshot(){
+    public Map<TeamPair, Details> snapshot() {
         return scoreboard.entrySet().stream().collect(
                 Collectors.toMap(
                         entry -> new TeamPair(entry.getKey()),

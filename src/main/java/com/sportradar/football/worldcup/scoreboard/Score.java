@@ -9,7 +9,8 @@ class Score implements Serializable {
 
     private Integer awayScore;
 
-    public Score() {}
+    public Score() {
+    }
 
     public Score(Score score) {
         this.homeScore = score.getHomeScore();

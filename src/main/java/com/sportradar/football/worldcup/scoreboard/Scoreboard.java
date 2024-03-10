@@ -10,7 +10,7 @@ public interface Scoreboard {
      * @param homeTeam Home team
      * @param awayTeam Away team
      */
-    public void startMatch(String homeTeam, String awayTeam);
+    void startMatch(String homeTeam, String awayTeam) throws ScoreboardInputException;
 
     /**
      * Receives a pair of absolute scores: home team score and away team score, then updates the scoreboard.
@@ -18,7 +18,7 @@ public interface Scoreboard {
      * @param homeTeamScore Home team score point
      * @param awayTeamScore Away team score point
      */
-    public void updateScore(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore);
+    void updateScore(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore) throws ScoreboardInputException;
 
     /**
      * Removes a match from the scoreboard
@@ -26,7 +26,7 @@ public interface Scoreboard {
      * @param homeTeam Home team
      * @param awayTeam Away team
      */
-    public void finishMatch(String homeTeam, String awayTeam);
+    void finishMatch(String homeTeam, String awayTeam) throws ScoreboardInputException;
 
     /**
      * Fetches a summary of the Scoreboard.

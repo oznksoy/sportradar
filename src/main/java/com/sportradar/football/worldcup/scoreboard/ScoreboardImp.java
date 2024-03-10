@@ -6,29 +6,38 @@ import java.util.Map;
 
 class ScoreboardImp implements Scoreboard {
 
-    private final ScoreboardCache cache;
-    private final ModuleClock clock;
+    //TODO: logger could be implemented
+    //Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public ScoreboardImp(ScoreboardCache cache, ModuleClock clock) {
+    private final ScoreboardCache cache;
+    private final ScoreboardClock clock;
+    private final ScoreboardAudit audit;
+
+    public ScoreboardImp(ScoreboardCache cache, ScoreboardClock clock, ScoreboardAudit audit) {
         this.cache = cache;
         this.clock = clock;
+        this.audit = audit;
     }
 
     @Override
-    public void startMatch(String homeTeam, String awayTeam) {
-        //TODO: Add checks and data audit
+    public void startMatch(String homeTeam, String awayTeam) throws ScoreboardInputException {
+        //TODO: Should an already existing game be added to the cache?
+        audit.checkInput(homeTeam, awayTeam);
         cache.put(fillTeamPair(homeTeam, awayTeam), initiateDetails());
     }
 
     @Override
-    public void updateScore(String homeTeam , String awayTeam, int homeTeamScore, int awayTeamScore) {
-        //TODO: Add checks and data audit
+    public void updateScore(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore) throws ScoreboardInputException {
+        //TODO: Should it be be able to override to a lower score to an existing match?
+        //TODO: Should there be a warning thrown when an nonexisting match is requested to be updated?
+        audit.checkInput(homeTeam, awayTeam);
         cache.put(fillTeamPair(homeTeam, awayTeam), fillDetails(homeTeamScore, awayTeamScore));
     }
 
     @Override
-    public void finishMatch(String homeTeam, String awayTeam) {
-        //TODO: Add checks and data audit
+    public void finishMatch(String homeTeam, String awayTeam) throws ScoreboardInputException {
+        //TODO: Should there be a warning thrown when an nonexisting match is requested to be finished?
+        audit.checkInput(homeTeam, awayTeam);
         cache.remove(fillTeamPair(homeTeam, awayTeam));
     }
 
@@ -39,42 +48,42 @@ class ScoreboardImp implements Scoreboard {
                 .sorted(getComparator()).toList();
     }
 
-    private TeamPair fillTeamPair(String homeTeam, String awayTeam){
+    private TeamPair fillTeamPair(String homeTeam, String awayTeam) {
         TeamPair teamPair = new TeamPair();
         teamPair.setHomeTeam(homeTeam);
         teamPair.setAwayTeam(awayTeam);
         return teamPair;
     }
 
-    private Details fillDetails(int homeTeamScore, int awayTeamScore){
+    private Details fillDetails(int homeTeamScore, int awayTeamScore) {
         Details details = new Details();
         details.setScore(fillScore(homeTeamScore, awayTeamScore));
         details.setMatchTime(clock.fetchTime());
         return details;
     }
 
-    private Details initiateDetails(){
+    private Details initiateDetails() {
         Details details = new Details();
         details.setScore(initiateScore());
         details.setMatchTime(clock.fetchTime());
         return details;
     }
 
-    private Score initiateScore(){
+    private Score initiateScore() {
         Score score = new Score();
         score.setHomeScore(0);
         score.setAwayScore(0);
         return score;
     }
 
-    private Score fillScore(int homeTeamScore, int awayTeamScore){
+    private Score fillScore(int homeTeamScore, int awayTeamScore) {
         Score score = new Score();
         score.setHomeScore(homeTeamScore);
         score.setAwayScore(awayTeamScore);
         return score;
     }
 
-    private Match decorateMatch(Map.Entry<TeamPair, Details> entry){
+    private Match decorateMatch(Map.Entry<TeamPair, Details> entry) {
         Match match = new Match();
         match.setHomeTeam(entry.getKey().getHomeTeam());
         match.setAwayTeam(entry.getKey().getAwayTeam());

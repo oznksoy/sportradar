@@ -10,7 +10,8 @@ class Details implements Serializable {
 
     private Score score;
 
-    public Details() {}
+    public Details() {
+    }
 
     public Details(Details details) {
         this.matchTime = details.getMatchTime();
