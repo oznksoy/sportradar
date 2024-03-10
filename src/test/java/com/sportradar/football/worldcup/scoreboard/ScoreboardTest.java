@@ -35,10 +35,24 @@ class ScoreboardTest {
     }
 
     @Test
+    void givenScoreboardIsEmpty_WhenMatchStarted_AndHomeTeamIsBlank_ThenMatchIsNotAdded_AndExceptionIsThrown() {
+        initScoreboard(new ScoreboardClock());
+        ScoreboardInputException thrown = Assertions.assertThrows(ScoreboardInputException.class, () -> scoreboard.startMatch("    ", "Canada"));
+        Assertions.assertEquals("An input value is blank: Home Team", thrown.getMessage());
+    }
+
+    @Test
     void givenScoreboardIsEmpty_WhenMatchStarted_AndAwayTeamIsNull_ThenMatchIsNotAdded_AndExceptionIsThrown() {
         initScoreboard(new ScoreboardClock());
         ScoreboardInputException thrown = Assertions.assertThrows(ScoreboardInputException.class, () -> scoreboard.startMatch("Canada", null));
         Assertions.assertEquals("An input value is null: Away Team", thrown.getMessage());
+    }
+
+    @Test
+    void givenScoreboardIsEmpty_WhenMatchStarted_AndAwayTeamIsBlank_ThenMatchIsNotAdded_AndExceptionIsThrown() {
+        initScoreboard(new ScoreboardClock());
+        ScoreboardInputException thrown = Assertions.assertThrows(ScoreboardInputException.class, () -> scoreboard.startMatch("Canada", "    "));
+        Assertions.assertEquals("An input value is blank: Away Team", thrown.getMessage());
     }
 
     @Test
@@ -49,10 +63,19 @@ class ScoreboardTest {
     }
 
     @Test
+    void givenScoreboardIsEmpty_WhenMatchStarted_AndInputValuesAreBlank_ThenMatchIsNotAdded_AndExceptionIsThrown() {
+        initScoreboard(new ScoreboardClock());
+        ScoreboardInputException thrown = Assertions.assertThrows(ScoreboardInputException.class, () -> scoreboard.startMatch("    ", "    "));
+        Assertions.assertEquals("An input value is blank: Home Team", thrown.getMessage());
+    }
+
+    @Test
     void givenScoreboardIsEmpty_WhenValidStartMatchInputIsReceived_ThenANewMatchIsAddedToTheScoreboard() throws ScoreboardInputException {
+        when(clockMock.fetchTime()).thenReturn(LocalDateTime.parse("2024-03-01T21:35:30"));
+        initScoreboard(clockMock);
         scoreboard.startMatch("Mexico", "Canada");
         Match actual = scoreboard.summary().getFirst();
-        assertEquals(decorateMatch("Uruguay", "Italy", "2024-03-01T21:35:30Z", 0, 0), actual);
+        assertEquals(decorateMatch("Uruguay", "Italy", "2024-03-01T21:35:30", 0, 0), actual);
     }
 
     @Test
@@ -117,14 +140,20 @@ class ScoreboardTest {
     // Supporting Test Methods:
     // ************************
 
+    @AfterEach
+    void afterEach(){
+        this.scoreboard = null;
+        ScoreboardCache.getInstance().cleanCache();
+    }
+
     void initScoreboard(ScoreboardClock clock){
         this.scoreboard = new ScoreboardImp(ScoreboardCache.getInstance(), clock, new ScoreboardAudit());
     }
 
-    @AfterEach
-     void afterEach(){
-        this.scoreboard = null;
-        ScoreboardCache.getInstance().cleanCache();
+    private Clock fetchTestClock(String timeClause) {
+        return Clock.fixed(
+                Instant.parse(timeClause),
+                ZoneOffset.UTC);
     }
 
     private Match decorateMatch(String home, String away, String time, int homeScore, int awayScore) {
