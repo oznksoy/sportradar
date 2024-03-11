@@ -95,7 +95,7 @@ class ScoreboardAudit {
     /**
      * Checks if a given score field has received a lower score value then already existing score.
      *
-     * @param inputName Input field descriptor name
+     * @param inputName  Input field descriptor name
      * @param inputScore incoming input score value
      * @param entryScore previously recorded input score value
      * @throws ScoreboardConsistencyException Input score is trying to write a lower score from the existing match record.
@@ -124,7 +124,7 @@ class ScoreboardAudit {
      * Checks if a given team name input value is blank. If so, then throws invalid input exception.
      *
      * @param inputName Input field descriptor name
-     * @param input actual input value
+     * @param input     actual input value
      * @throws ScoreboardInputException Team input is a blank value.
      */
     public void checkBlankInput(String inputName, String input) throws ScoreboardInputException {
@@ -138,7 +138,7 @@ class ScoreboardAudit {
      * Checks if a given team name input value is null. If so, then throws invalid input exception.
      *
      * @param inputName Input field descriptor name
-     * @param input actual input value
+     * @param input     actual input value
      * @throws ScoreboardInputException Team input is null.
      */
     public void checkNullInput(String inputName, Object input) throws ScoreboardInputException {

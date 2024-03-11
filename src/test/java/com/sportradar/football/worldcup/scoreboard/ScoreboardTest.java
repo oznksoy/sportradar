@@ -19,6 +19,11 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+/**
+ * Scoreboard Test with standard/default scoreboard implementation class.
+ * To understand the purpose and scenarios of the test cases, read the method names carefully.
+ * The names are written in BDD key structure.
+ */
 @ExtendWith(MockitoExtension.class)
 class ScoreboardTest {
 

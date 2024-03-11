@@ -16,11 +16,14 @@ import java.util.List;
  */
 public interface Scoreboard {
 
+
     /**
      * Initiates a match and registers it to the score board.
      *
-     * @param homeTeam Home team
-     * @param awayTeam Away team
+     * @param homeTeam Home Team Name
+     * @param awayTeam Away Team Name
+     * @throws ScoreboardInputException       Signals invalid input such as blank or null values.
+     * @throws ScoreboardConsistencyException Signals input that is inconsistent with the existing state of the Scoreboard.
      */
     void startMatch(String homeTeam, String awayTeam) throws ScoreboardInputException, ScoreboardConsistencyException;
 
@@ -29,6 +32,8 @@ public interface Scoreboard {
      *
      * @param homeTeamScore Home team score point
      * @param awayTeamScore Away team score point
+     * @throws ScoreboardInputException       Signals invalid input such as blank or null values.
+     * @throws ScoreboardConsistencyException Signals input that is inconsistent with the existing state of the Scoreboard.
      */
     void updateScore(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore) throws ScoreboardInputException, ScoreboardConsistencyException;
 
@@ -37,6 +42,8 @@ public interface Scoreboard {
      *
      * @param homeTeam Home team
      * @param awayTeam Away team
+     * @throws ScoreboardInputException       Signals invalid input such as blank or null values.
+     * @throws ScoreboardConsistencyException Signals input that is inconsistent with the existing state of the Scoreboard.
      */
     void finishMatch(String homeTeam, String awayTeam) throws ScoreboardInputException, ScoreboardConsistencyException;
 

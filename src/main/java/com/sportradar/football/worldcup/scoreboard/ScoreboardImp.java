@@ -8,21 +8,49 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Default base of the Scoreboard with Shared Memory.
+ *
+ * @author Ozan Aksoy
+ */
 class ScoreboardImp implements Scoreboard {
 
-    //TODO: logger could be implemented
-    //Logger logger = Logger.getLogger(this.getClass().getName());
-
+    /**
+     * Scoreboard Cache.
+     */
     private final ScoreboardCache cache;
+
+    /**
+     * Common Module Clock.
+     */
     private final ScoreboardClock clock;
+
+    /**
+     * Common Scoreboard Audit.
+     */
     private final ScoreboardAudit audit;
 
+    /**
+     * Default Scoreboard Implementation.
+     *
+     * @param cache Scoreboard Cache
+     * @param clock Instance Clock
+     * @param audit Instance Audit
+     */
     public ScoreboardImp(ScoreboardCache cache, ScoreboardClock clock, ScoreboardAudit audit) {
         this.cache = cache;
         this.clock = clock;
         this.audit = audit;
     }
 
+    /**
+     * Initiates a match and registers it to the score board.
+     *
+     * @param homeTeam Home Team Name
+     * @param awayTeam Away Team Name
+     * @throws ScoreboardInputException       Signals invalid input such as blank or null values.
+     * @throws ScoreboardConsistencyException Signals input that is inconsistent with the existing state of the Scoreboard.
+     */
     @Override
     public void startMatch(String homeTeam, String awayTeam) throws ScoreboardInputException, ScoreboardConsistencyException {
         audit.checkInputValidity(homeTeam, awayTeam);
@@ -31,56 +59,11 @@ class ScoreboardImp implements Scoreboard {
         cache.put(teamPair, initiateDetails());
     }
 
-    @Override
-    public void updateScore(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore) throws ScoreboardInputException, ScoreboardConsistencyException {
-        audit.checkInputValidity(homeTeam, awayTeam);
-        TeamPair teamPair = fillTeamPair(homeTeam, awayTeam);
-        audit.checkIfMustHaveEntry(cache.hasEntry(teamPair), homeTeam, awayTeam);
-        Details details = cache.getDetails(teamPair);
-        audit.checkScoreConsistency(
-                homeTeamScore,
-                awayTeamScore,
-                details.getScore().getHomeScore(),
-                details.getScore().getAwayScore()
-        );
-        cache.put(teamPair, fillDetails(homeTeamScore, awayTeamScore, details.getStartTime()));
-    }
-
-    @Override
-    public void finishMatch(String homeTeam, String awayTeam) throws ScoreboardInputException, ScoreboardConsistencyException {
-        audit.checkInputValidity(homeTeam, awayTeam);
-        TeamPair teamPair = fillTeamPair(homeTeam, awayTeam);
-        audit.checkIfMustHaveEntry(cache.hasEntry(teamPair), homeTeam, awayTeam);
-        cache.remove(teamPair);
-    }
-
-    @Override
-    public List<Match> summary() {
-        return cache.snapshot().entrySet().stream()
-                .map(this::decorateMatch)
-                .sorted(getTotalScoreComparator().reversed().thenComparing(getMatchTimeComparator())).toList();
-    }
-
-    private Comparator<Match> getTotalScoreComparator() {
-        return Comparator.comparingInt(match -> (match.getHomeScore() + match.getAwayScore()));
-    }
-
-    private Comparator<Match> getMatchTimeComparator() {
-        return (match1, match2) -> match2.getMatchTime().compareTo(match1.getMatchTime());
-    }
-
     private TeamPair fillTeamPair(String homeTeam, String awayTeam) {
         TeamPair teamPair = new TeamPair();
         teamPair.setHomeTeam(homeTeam);
         teamPair.setAwayTeam(awayTeam);
         return teamPair;
-    }
-
-    private Details fillDetails(int homeTeamScore, int awayTeamScore, LocalDateTime matchTime) {
-        Details details = new Details();
-        details.setScore(fillScore(homeTeamScore, awayTeamScore));
-        details.setStartTime(matchTime);
-        return details;
     }
 
     private Details initiateDetails() {
@@ -97,11 +80,76 @@ class ScoreboardImp implements Scoreboard {
         return score;
     }
 
+    /**
+     * Receives a pair of absolute scores: home team score and away team score, then updates the scoreboard.
+     *
+     * @param homeTeamScore Home team score point
+     * @param awayTeamScore Away team score point
+     * @throws ScoreboardInputException       Signals invalid input such as blank or null values.
+     * @throws ScoreboardConsistencyException Signals input that is inconsistent with the existing state of the Scoreboard.
+     */
+    @Override
+    public void updateScore(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore) throws ScoreboardInputException, ScoreboardConsistencyException {
+        audit.checkInputValidity(homeTeam, awayTeam);
+        TeamPair teamPair = fillTeamPair(homeTeam, awayTeam);
+        audit.checkIfMustHaveEntry(cache.hasEntry(teamPair), homeTeam, awayTeam);
+        Details details = cache.getDetails(teamPair);
+        audit.checkScoreConsistency(
+                homeTeamScore,
+                awayTeamScore,
+                details.getScore().getHomeScore(),
+                details.getScore().getAwayScore()
+        );
+        cache.put(teamPair, fillDetails(homeTeamScore, awayTeamScore, details.getStartTime()));
+    }
+
+
+    private Details fillDetails(int homeTeamScore, int awayTeamScore, LocalDateTime matchTime) {
+        Details details = new Details();
+        details.setScore(fillScore(homeTeamScore, awayTeamScore));
+        details.setStartTime(matchTime);
+        return details;
+    }
+
     private Score fillScore(int homeTeamScore, int awayTeamScore) {
         Score score = new Score();
         score.setHomeScore(homeTeamScore);
         score.setAwayScore(awayTeamScore);
         return score;
+    }
+
+    /**
+     * Removes a match from the scoreboard
+     *
+     * @param homeTeam Home team
+     * @param awayTeam Away team
+     * @throws ScoreboardInputException       Signals invalid input such as blank or null values.
+     * @throws ScoreboardConsistencyException Signals input that is inconsistent with the existing state of the Scoreboard.
+     */
+    @Override
+    public void finishMatch(String homeTeam, String awayTeam) throws ScoreboardInputException, ScoreboardConsistencyException {
+        audit.checkInputValidity(homeTeam, awayTeam);
+        TeamPair teamPair = fillTeamPair(homeTeam, awayTeam);
+        audit.checkIfMustHaveEntry(cache.hasEntry(teamPair), homeTeam, awayTeam);
+        cache.remove(teamPair);
+    }
+
+    /**
+     * Fetches a summary of the Scoreboard.
+     */
+    @Override
+    public List<Match> summary() {
+        return cache.snapshot().entrySet().stream()
+                .map(this::decorateMatch)
+                .sorted(getTotalScoreComparator().reversed().thenComparing(getMatchTimeComparator())).toList();
+    }
+
+    private Comparator<Match> getTotalScoreComparator() {
+        return Comparator.comparingInt(match -> (match.getHomeScore() + match.getAwayScore()));
+    }
+
+    private Comparator<Match> getMatchTimeComparator() {
+        return (match1, match2) -> match2.getMatchTime().compareTo(match1.getMatchTime());
     }
 
     private Match decorateMatch(Map.Entry<TeamPair, Details> entry) {
