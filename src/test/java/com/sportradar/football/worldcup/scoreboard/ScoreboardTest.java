@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
 
 /**
@@ -248,11 +249,10 @@ class ScoreboardTest {
     @AfterEach
     void afterEach(){
         this.scoreboard = null;
-        ScoreboardCache.getInstance().cleanCache();
     }
 
     void initScoreboard(ScoreboardClock clock){
-        this.scoreboard = new ScoreboardImp(ScoreboardCache.getInstance(), clock, new ScoreboardAudit());
+        this.scoreboard = new ScoreboardImp(new ScoreboardCache(), clock, new ScoreboardAudit());
     }
 
     private Match decorateMatch(String home, String away, String time, int homeScore, int awayScore) {

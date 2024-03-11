@@ -11,28 +11,14 @@ import java.util.stream.Collectors;
  */
 class ScoreboardCache {
 
-    private static ScoreboardCache instance;
 
     /**
      * Score board cache. In-built mechanisms of @link {@link ConcurrentHashMap} collection enables desired fast read and securely locked write operations by default.
      */
     private final Map<TeamPair, Details> scoreboard;
 
-    private ScoreboardCache() {
+    public ScoreboardCache() {
         this.scoreboard = new ConcurrentHashMap<>();
-    }
-
-    /**
-     * Call Scoreboard cache singular instance.
-     *
-     * @return Scoreboard cache singleton.
-     */
-    public static ScoreboardCache getInstance() {
-        if (instance == null) {
-            instance = new ScoreboardCache();
-
-        }
-        return instance;
     }
 
     /**
@@ -86,13 +72,6 @@ class ScoreboardCache {
                         entry -> new Details(entry.getValue())
                 )
         );
-    }
-
-    /**
-     * Cleans cache if required.
-     */
-    void cleanCache() {
-        this.scoreboard.clear();
     }
 
 }
