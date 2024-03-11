@@ -7,7 +7,7 @@ import java.io.IOException;
  *
  * @author Ozan Aksoy
  */
-public class ScoreboardConsistencyException extends IOException {
+public final class ScoreboardConsistencyException extends IOException {
 
     /**
      * Signals that a data inconsistency with the incoming input request was detected.

@@ -9,7 +9,7 @@ import java.util.Objects;
  *
  * @author Ozan Aksoy
  */
-public class Match implements Serializable {
+public final class Match implements Serializable {
 
     private String homeTeam;
 

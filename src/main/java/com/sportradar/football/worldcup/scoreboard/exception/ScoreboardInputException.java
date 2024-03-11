@@ -7,7 +7,7 @@ import java.io.IOException;
  *
  * @author Ozan Aksoy
  */
-public class ScoreboardInputException extends IOException {
+public final class ScoreboardInputException extends IOException {
 
     /**
      * Signals that a scoreboard input was not valid.

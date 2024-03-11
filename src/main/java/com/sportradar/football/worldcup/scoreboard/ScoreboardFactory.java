@@ -3,7 +3,7 @@ package com.sportradar.football.worldcup.scoreboard;
 /**
  * Accessor factory Entity for Scoreboard calls and injections.
  */
-public class ScoreboardFactory {
+public final class ScoreboardFactory {
 
     private ScoreboardFactory() {
     }
