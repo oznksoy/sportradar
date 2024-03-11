@@ -4,6 +4,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * Scoreboard aggregate match data representative entity.
+ *
+ * @author Ozan Aksoy
+ */
 public class Match implements Serializable {
 
     private String homeTeam;

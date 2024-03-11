@@ -3,15 +3,29 @@ package com.sportradar.football.worldcup.scoreboard;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class TeamPair implements Serializable {
+/**
+ * Package encapsulated data entity to store  two teams in the match to the scoreboard.
+ * This pair is to be used as key in correlation to {@link Details} mapping.
+ *
+ * @author Ozan Aksoy
+ */
+class TeamPair implements Serializable {
 
     private String homeTeam;
 
     private String awayTeam;
 
+    /**
+     * Scoreboard match team pairs to be used as key in correlation to {@link Details}.
+     */
     public TeamPair() {
     }
 
+    /**
+     *
+     *
+     * @param teamPair
+     */
     public TeamPair(TeamPair teamPair) {
         this.homeTeam = teamPair.getHomeTeam();
         this.awayTeam = teamPair.getAwayTeam();

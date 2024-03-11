@@ -5,6 +5,15 @@ import com.sportradar.football.worldcup.scoreboard.exception.ScoreboardInputExce
 
 import java.util.List;
 
+/**
+ * <p>Scoreboard stored an incoming starting match data with team, start time and latest score details in a memory cache.
+ * Data is not stored in a persistent data store. Scoreboard supports starting a match, updating score points,
+ * finalizing a match, and generating a summary of the scoreboard.</p>
+ * <br>
+ * <p>Note that only running matches are stored, and finished matches are removed from the scoreboard and are not traced.</p>
+ *
+ * @author Ozan Aksoy
+ */
 public interface Scoreboard {
 
     /**

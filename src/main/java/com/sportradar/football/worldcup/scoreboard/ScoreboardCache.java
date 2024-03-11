@@ -5,13 +5,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * In-built mechanisms of @link {@link ConcurrentHashMap} collection enables desired fast read and securely locked write operations by default
+ * Thread-Safe, fast read, locked write data structure based internal scoreboard cache singleton. It stores the match in atomized data entities.
  */
 class ScoreboardCache {
 
     private static ScoreboardCache instance;
+
     /**
-     * Score board cache
+     * Score board cache. In-built mechanisms of @link {@link ConcurrentHashMap} collection enables desired fast read and securely locked write operations by default.
      */
     private final Map<TeamPair, Details> scoreboard;
 
@@ -19,6 +20,11 @@ class ScoreboardCache {
         this.scoreboard = new ConcurrentHashMap<>();
     }
 
+    /**
+     * Call Scoreboard cache singular instance.
+     *
+     * @return Scoreboard cache singleton.
+     */
     public static ScoreboardCache getInstance() {
         if (instance == null) {
             instance = new ScoreboardCache();

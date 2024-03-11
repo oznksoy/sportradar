@@ -3,15 +3,28 @@ package com.sportradar.football.worldcup.scoreboard;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Granular score pair storing representative entity.
+ *
+ * @author Ozan Aksoy
+ */
 class Score implements Serializable {
 
     private Integer homeScore;
 
     private Integer awayScore;
 
+    /**
+     * Score data of the Match
+     */
     public Score() {
     }
 
+    /**
+     * Deep copy enabling cloning constructor.
+     *
+     * @param score Match score.
+     */
     public Score(Score score) {
         this.homeScore = score.getHomeScore();
         this.awayScore = score.getAwayScore();

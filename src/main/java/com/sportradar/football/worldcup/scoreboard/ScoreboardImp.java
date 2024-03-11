@@ -43,7 +43,7 @@ class ScoreboardImp implements Scoreboard {
                 details.getScore().getHomeScore(),
                 details.getScore().getAwayScore()
         );
-        cache.put(teamPair, fillDetails(homeTeamScore, awayTeamScore, details.getMatchTime()));
+        cache.put(teamPair, fillDetails(homeTeamScore, awayTeamScore, details.getStartTime()));
     }
 
     @Override
@@ -79,14 +79,14 @@ class ScoreboardImp implements Scoreboard {
     private Details fillDetails(int homeTeamScore, int awayTeamScore, LocalDateTime matchTime) {
         Details details = new Details();
         details.setScore(fillScore(homeTeamScore, awayTeamScore));
-        details.setMatchTime(matchTime);
+        details.setStartTime(matchTime);
         return details;
     }
 
     private Details initiateDetails() {
         Details details = new Details();
         details.setScore(initiateScore());
-        details.setMatchTime(clock.fetchTime());
+        details.setStartTime(clock.fetchTime());
         return details;
     }
 
@@ -108,7 +108,7 @@ class ScoreboardImp implements Scoreboard {
         Match match = new Match();
         match.setHomeTeam(entry.getKey().getHomeTeam());
         match.setAwayTeam(entry.getKey().getAwayTeam());
-        match.setMatchTime(entry.getValue().getMatchTime());
+        match.setMatchTime(entry.getValue().getStartTime());
         match.setHomeScore(entry.getValue().getScore().getHomeScore());
         match.setAwayScore(entry.getValue().getScore().getAwayScore());
         return match;
