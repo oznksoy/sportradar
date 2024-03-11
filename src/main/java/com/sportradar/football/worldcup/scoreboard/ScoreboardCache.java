@@ -15,7 +15,7 @@ class ScoreboardCache {
     /**
      * Score board cache. In-built mechanisms of @link {@link ConcurrentHashMap} collection enables desired fast read and securely locked write operations by default.
      */
-    private final Map<TeamPair, Details> scoreboard;
+    private final Map<MatchTeamPair, MatchDetails> scoreboard;
 
     public ScoreboardCache() {
         this.scoreboard = new ConcurrentHashMap<>();
@@ -27,7 +27,7 @@ class ScoreboardCache {
      * @param teamPair Team Pair as Key to check.
      * @return If key exists.
      */
-    public boolean hasEntry(TeamPair teamPair) {
+    public boolean hasEntry(MatchTeamPair teamPair) {
         return scoreboard.containsKey(teamPair);
     }
 
@@ -37,17 +37,17 @@ class ScoreboardCache {
      * @param teamPair Team Pair as Key used in finding match details.
      * @return Match details.
      */
-    public Details getDetails(TeamPair teamPair) {
+    public MatchDetails getDetails(MatchTeamPair teamPair) {
         return scoreboard.get(teamPair);
     }
 
     /**
-     * Store {@link TeamPair} - @{@link Details}  key - value pair in the scoreboard cache.
+     * Store {@link MatchTeamPair} - @{@link MatchDetails}  key - value pair in the scoreboard cache.
      *
      * @param teamPair Teams in the Match
      * @param details  Match Details
      */
-    public void put(TeamPair teamPair, Details details) {
+    public void put(MatchTeamPair teamPair, MatchDetails details) {
         scoreboard.put(teamPair, details);
     }
 
@@ -56,7 +56,7 @@ class ScoreboardCache {
      *
      * @param teamPair Corresponding key to the record.
      */
-    public void remove(TeamPair teamPair) {
+    public void remove(MatchTeamPair teamPair) {
         this.scoreboard.remove(teamPair);
     }
 
@@ -65,11 +65,11 @@ class ScoreboardCache {
      *
      * @return A snapshot of scoreboard.
      */
-    public Map<TeamPair, Details> snapshot() {
+    public Map<MatchTeamPair, MatchDetails> snapshot() {
         return scoreboard.entrySet().stream().collect(
                 Collectors.toMap(
-                        entry -> new TeamPair(entry.getKey()),
-                        entry -> new Details(entry.getValue())
+                        entry -> new MatchTeamPair(entry.getKey()),
+                        entry -> new MatchDetails(entry.getValue())
                 )
         );
     }

@@ -54,27 +54,27 @@ class ScoreboardImp implements Scoreboard {
     @Override
     public void startMatch(String homeTeam, String awayTeam) throws ScoreboardInputException, ScoreboardConsistencyException {
         audit.checkInputValidity(homeTeam, awayTeam);
-        TeamPair teamPair = fillTeamPair(homeTeam, awayTeam);
+        MatchTeamPair teamPair = fillTeamPair(homeTeam, awayTeam);
         audit.checkIfMustNotHaveEntry(cache.hasEntry(teamPair), homeTeam, awayTeam);
         cache.put(teamPair, initiateDetails());
     }
 
-    private TeamPair fillTeamPair(String homeTeam, String awayTeam) {
-        TeamPair teamPair = new TeamPair();
+    private MatchTeamPair fillTeamPair(String homeTeam, String awayTeam) {
+        MatchTeamPair teamPair = new MatchTeamPair();
         teamPair.setHomeTeam(homeTeam);
         teamPair.setAwayTeam(awayTeam);
         return teamPair;
     }
 
-    private Details initiateDetails() {
-        Details details = new Details();
+    private MatchDetails initiateDetails() {
+        MatchDetails details = new MatchDetails();
         details.setScore(initiateScore());
         details.setStartTime(clock.fetchTime());
         return details;
     }
 
-    private Score initiateScore() {
-        Score score = new Score();
+    private MatchScore initiateScore() {
+        MatchScore score = new MatchScore();
         score.setHomeScore(0);
         score.setAwayScore(0);
         return score;
@@ -91,9 +91,9 @@ class ScoreboardImp implements Scoreboard {
     @Override
     public void updateScore(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore) throws ScoreboardInputException, ScoreboardConsistencyException {
         audit.checkInputValidity(homeTeam, awayTeam);
-        TeamPair teamPair = fillTeamPair(homeTeam, awayTeam);
+        MatchTeamPair teamPair = fillTeamPair(homeTeam, awayTeam);
         audit.checkIfMustHaveEntry(cache.hasEntry(teamPair), homeTeam, awayTeam);
-        Details details = cache.getDetails(teamPair);
+        MatchDetails details = cache.getDetails(teamPair);
         audit.checkScoreConsistency(
                 homeTeamScore,
                 awayTeamScore,
@@ -104,15 +104,15 @@ class ScoreboardImp implements Scoreboard {
     }
 
 
-    private Details fillDetails(int homeTeamScore, int awayTeamScore, LocalDateTime matchTime) {
-        Details details = new Details();
+    private MatchDetails fillDetails(int homeTeamScore, int awayTeamScore, LocalDateTime matchTime) {
+        MatchDetails details = new MatchDetails();
         details.setScore(fillScore(homeTeamScore, awayTeamScore));
         details.setStartTime(matchTime);
         return details;
     }
 
-    private Score fillScore(int homeTeamScore, int awayTeamScore) {
-        Score score = new Score();
+    private MatchScore fillScore(int homeTeamScore, int awayTeamScore) {
+        MatchScore score = new MatchScore();
         score.setHomeScore(homeTeamScore);
         score.setAwayScore(awayTeamScore);
         return score;
@@ -129,7 +129,7 @@ class ScoreboardImp implements Scoreboard {
     @Override
     public void finishMatch(String homeTeam, String awayTeam) throws ScoreboardInputException, ScoreboardConsistencyException {
         audit.checkInputValidity(homeTeam, awayTeam);
-        TeamPair teamPair = fillTeamPair(homeTeam, awayTeam);
+        MatchTeamPair teamPair = fillTeamPair(homeTeam, awayTeam);
         audit.checkIfMustHaveEntry(cache.hasEntry(teamPair), homeTeam, awayTeam);
         cache.remove(teamPair);
     }
@@ -152,7 +152,7 @@ class ScoreboardImp implements Scoreboard {
         return (match1, match2) -> match2.getMatchTime().compareTo(match1.getMatchTime());
     }
 
-    private Match decorateMatch(Map.Entry<TeamPair, Details> entry) {
+    private Match decorateMatch(Map.Entry<MatchTeamPair, MatchDetails> entry) {
         Match match = new Match();
         match.setHomeTeam(entry.getKey().getHomeTeam());
         match.setAwayTeam(entry.getKey().getAwayTeam());

@@ -5,22 +5,22 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * <p>Package encapsulated data entity to store scoreboard match details in correlation to {@link TeamPair}.</p>
+ * <p>Package encapsulated data entity to store scoreboard match details in correlation to {@link MatchTeamPair}.</p>
  * <br>
- * <p>Match details mainly carries {@link Details#startTime} that signals initial match start time. Score details are also stored in this entity.</p>
+ * <p>Match details mainly carries {@link MatchDetails#startTime} that signals initial match start time. Score details are also stored in this entity.</p>
  *
  * @author Ozan Aksoy
  */
-class Details implements Serializable {
+class MatchDetails implements Serializable {
 
     private LocalDateTime startTime;
 
-    private Score score;
+    private MatchScore score;
 
     /**
-     * Scoreboard match details in correlation to {@link TeamPair}.
+     * Scoreboard match details in correlation to {@link MatchTeamPair}.
      */
-    public Details() {
+    public MatchDetails() {
     }
 
     /**
@@ -28,9 +28,9 @@ class Details implements Serializable {
      *
      * @param details Match details to be cloned.
      */
-    public Details(Details details) {
+    public MatchDetails(MatchDetails details) {
         this.startTime = details.getStartTime();
-        this.score = new Score(details.getScore());
+        this.score = new MatchScore(details.getScore());
     }
 
     public LocalDateTime getStartTime() {
@@ -41,18 +41,18 @@ class Details implements Serializable {
         this.startTime = startTime;
     }
 
-    public Score getScore() {
+    public MatchScore getScore() {
         return score;
     }
 
-    public void setScore(Score score) {
+    public void setScore(MatchScore score) {
         this.score = score;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Details details)) return false;
+        if (!(o instanceof MatchDetails details)) return false;
         return Objects.equals(startTime, details.startTime) && Objects.equals(score, details.score);
     }
 

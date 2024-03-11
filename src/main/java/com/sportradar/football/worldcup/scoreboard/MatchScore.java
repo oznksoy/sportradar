@@ -8,7 +8,7 @@ import java.util.Objects;
  *
  * @author Ozan Aksoy
  */
-class Score implements Serializable {
+class MatchScore implements Serializable {
 
     private Integer homeScore;
 
@@ -17,7 +17,7 @@ class Score implements Serializable {
     /**
      * Score data of the Match
      */
-    public Score() {
+    public MatchScore() {
     }
 
     /**
@@ -25,7 +25,7 @@ class Score implements Serializable {
      *
      * @param score Match score.
      */
-    public Score(Score score) {
+    public MatchScore(MatchScore score) {
         this.homeScore = score.getHomeScore();
         this.awayScore = score.getAwayScore();
     }
@@ -49,7 +49,7 @@ class Score implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Score score)) return false;
+        if (!(o instanceof MatchScore score)) return false;
         return Objects.equals(homeScore, score.homeScore) && Objects.equals(awayScore, score.awayScore);
     }
 
