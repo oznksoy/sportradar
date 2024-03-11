@@ -22,9 +22,9 @@ class TeamPair implements Serializable {
     }
 
     /**
+     * Deep copy enabling cloning constructor.
      *
-     *
-     * @param teamPair
+     * @param teamPair Two teams of the match
      */
     public TeamPair(TeamPair teamPair) {
         this.homeTeam = teamPair.getHomeTeam();
