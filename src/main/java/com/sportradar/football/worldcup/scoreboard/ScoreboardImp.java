@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Default base of the Scoreboard.
+ * Default Scoreboard Implementation.
  *
  * @author Ozan Aksoy
  */
@@ -102,7 +102,6 @@ class ScoreboardImp implements Scoreboard {
         );
         cache.put(teamPair, fillDetails(homeTeamScore, awayTeamScore, details.getStartTime()));
     }
-
 
     private MatchDetails fillDetails(int homeTeamScore, int awayTeamScore, LocalDateTime matchTime) {
         MatchDetails details = new MatchDetails();
