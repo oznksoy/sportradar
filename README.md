@@ -11,7 +11,7 @@ Aim of the module is to create a scoreboard module that can record and display:
 
 ### Tests:
 
-- Current code coverage is %89. This is after targeting to cover the main behavioral code artifacts, thus this seems to be the functionally liable threshold for the current structure of the module. Further extension to the data entity classes are not implemented as it will create redundancy and further test maintenance requirements in the future.
+- Current code coverage is %88. This is after targeting to cover the main behavioral code artifacts, thus this seems to be the functionally liable threshold for the current structure of the module. Further extension to the data entity classes are not implemented as it will create redundancy and further test maintenance requirements in the future.
 - Test are written in consideration to Behavioral Driven Development (BDD) standards. Although an additional framework has not been used, the test method names and test scenarios are there to mimic actual use cases.
 - Test scenarios are explained mainly on the test method signature. They follow BDD keywords and thus self-explanatory.
 
