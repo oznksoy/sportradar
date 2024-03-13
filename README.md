@@ -68,7 +68,7 @@ Aim of the module is to create a scoreboard module that can record and display:
 - Trying to enter the same state of a match once again redundantly.
 
 ### Naming Conventions:
-Names are selected to be descriptive and without shortening. Class names starts with arch grouping names, such as Scoreboard and Match. Method names are to the point yet descriptive. These are done so that both dependent modules for the library module can understand the flows intuitively and it would also be easier to maintain and extend the development of the module in the future.
+Names are selected to be descriptive and without shortening. Class names starts with arch grouping names, such as Scoreboard and Match. Method names are to the point yet descriptive. These are done so that both dependent modules for the library module can understand the flows intuitively, and it would also be easier to maintain and extend the development of the module in the future.
 
 ### Method Sizes and Behavioral Complexity:
 Methods are designed to closely follow the SOLID guidelines. The separation of the implementing structures are also follows the same principles.
@@ -77,5 +77,5 @@ Methods are designed to closely follow the SOLID guidelines. The separation of t
 Project is using gradle 8.6 with a kotlin based script definition and also includes wrapper for convenience. The wrapper can be removed while further deployment to ensure light-weight aspect of the module.
 
 ### Further Development:
-It is possible to enlist a more functional perspective on data mapping methods. This can be achieved using functional interfaces and mapper classes that are separate from default scoreboard implementation class. However for now, since the input structure of the project does not consist of large data streams and events, this approach was not deemed necessary, and it was avoided to keep a more simple outline for the module structure.
+It is possible to enlist a more functional perspective on data mapping methods. This can be achieved using functional interfaces and mapper classes that are separate from default scoreboard implementation class. However, for now, since the input structure of the project does not consist of large data streams and events, this approach was not deemed necessary, and it was avoided to keep a more simple outline for the module structure.
 
