@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * Thread-Safe, fast read, locked write data structure based internal scoreboard cache singleton. It stores the match in atomized data entities.
+ * Thread-Safe, fast read, locked write data structure based internal scoreboard cache. It stores the match in atomized data entities.
  *
  * @author Ozan Aksoy
  */
