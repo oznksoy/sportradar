@@ -38,7 +38,7 @@ public interface Scoreboard {
     void updateScore(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore) throws ScoreboardInputException, ScoreboardConsistencyException;
 
     /**
-     * Removes a match from the scoreboard
+     * Removes a match from the scoreboard.
      *
      * @param homeTeam Home team
      * @param awayTeam Away team

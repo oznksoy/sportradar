@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Default base of the Scoreboard with Shared Memory.
+ * Default base of the Scoreboard.
  *
  * @author Ozan Aksoy
  */
@@ -119,7 +119,7 @@ class ScoreboardImp implements Scoreboard {
     }
 
     /**
-     * Removes a match from the scoreboard
+     * Removes a match from the scoreboard.
      *
      * @param homeTeam Home team
      * @param awayTeam Away team
