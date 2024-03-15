@@ -27,7 +27,7 @@ Aim of the module is to create a scoreboard module that can record and display:
 
 <ol>
 <li>Scoreboard Implementation: Main Scoreboard manager class which orchestrates all other responsible aspects and binds them to a final behavior.</li>
-<li>Scoreboard Audit Class: Responsible for maintaining exceptions and data and behavior state controls for the scoreboard module</li>
+<li>Scoreboard Audit Class: Responsible for maintaining exceptions, data consistency, and behavior state controls for the scoreboard module</li>
 <li>Scoreboard Cache: Responsible for the memory management.</li>
 <li>Scoreboard Clock: Responsible for stubbing time related functions.</li>
 </ol>
