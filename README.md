@@ -17,7 +17,7 @@ Aim of the module is to create a scoreboard module that can record and display:
 
 ### Development Considerations:
 
-- Scoreboard module was first designed to use a shared memory management as a singleton cache memory. Later on, since this is a library module, it was decided that the best implementation would be to have independent instances with unlinked memory spaces, since there can be many scoreboards running at the same time, thus they would need separates memories.
+- Scoreboard module was first designed to use a shared memory management as a singleton cache memory. Later on, since this is a library module, it was decided that the best implementation would be to have independent instances with unlinked memory spaces, since there can be many scoreboards running at the same time, thus they would need separate memories.
 - Scoreboard module only exposes necessary parts of the module to ensure functional use and resisting software decay that can happen in time after the library module release.
 - Main use of the scoreboard is to call the static builder on the factory class. This factory can be enhanced to support more complex initiations in the future, or it can be replaced with a builder.
 
