@@ -47,7 +47,7 @@ Aim of the module is to create a scoreboard module that can record and display:
 <li>MatchScore : Hold home and away score data and directly used by match details</li>
 </ol>
 
-- This Structure enables the following:
+- This structure enables the following:
 
 <ol>
 <li> It is possible to extend the data structure without minimal alterations to the overlaying structure.</li>
